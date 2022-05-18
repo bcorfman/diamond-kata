@@ -1,12 +1,12 @@
 [project]
 name = "Diamond"
-version = "0.1"
+version = "1.0"
 description = "code kata from https://codingdojo.org/kata/Diamond/"
 authors = [
-    {name = "Brandon Corfman", email = "brandon.c.corfman.civ@army.mil"},
+    {name = "Brandon Corfman", email = "bcorfman@fastmail.fm"},
 ]
 dependencies = []
-requires-python = ">=3.9"
+requires-python = ">=3.7"
 license = {text = "MIT"}
 [project.optional-dependencies]
 
