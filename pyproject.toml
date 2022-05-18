@@ -1,0 +1,23 @@
+[project]
+name = "Diamond"
+version = "0.1"
+description = "code kata from https://codingdojo.org/kata/Diamond/"
+authors = [
+    {name = "Brandon Corfman", email = "brandon.c.corfman.civ@army.mil"},
+]
+dependencies = []
+requires-python = ">=3.9"
+license = {text = "MIT"}
+[project.optional-dependencies]
+
+[tool.pdm]
+[tool.pdm.dev-dependencies]
+dev = [
+    "pytest>=7.1.2",
+    "pysnooper>=1.1.1",
+    "ipython>=8.3.0",
+]
+
+[build-system]
+requires = ["pdm-pep517>=0.12.0"]
+build-backend = "pdm.pep517.api"
