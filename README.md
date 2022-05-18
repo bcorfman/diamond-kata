@@ -11,3 +11,7 @@ A solution to the kata at <https://codingdojo.org/kata/Diamond/>
 ## Running the tests
 
 * From a command prompt inside the project folder, type `pdm run pytest`.
+
+## Running the code
+
+* From a command prompt inside the project folder, type `pdm run python main.py`.
