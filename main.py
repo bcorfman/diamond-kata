@@ -15,7 +15,7 @@ def diamond(letter):
         output += leading_spaces + ALPHABET[i]
         num_chars = min(i + 1, 2)
         if num_chars > 1:
-            output += ' ' * ((i - 1) * 2 + 1) + ALPHABET[i] 
+            output += ' ' * ((i - 1) * 2 + 1) + ALPHABET[i]
         output += '\n'
     return output
 

@@ -1,0 +1,70 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Python application
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.*"
+
+env:
+  GITHUB_TOKEN: ${{ github.token }}
+  APP_NAME: "diamond"
+
+jobs:
+  create_release:
+    name: Create release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+  build:
+    needs: create_release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: [3.10]
+        include:
+          - os: ubuntu-latest
+            x86_64: ./dist/diamond
+            name: bin
+          - os: windows-latest
+            x86_64: ./dist/diamond.exe
+            name: exe
+    steps:
+      - uses: actions/checkout@v2
+      - uses: seanmiddleditch/gha-setup-vsdevenv@master
+      - uses: Chocobo1/setup-ccache-action@v1
+      - name: Set env repo name
+        run: echo "REPOSITORY_NAME=${GITHUB_REPOSITORY#*\/}" >> $GITHUB_ENV
+      - name: Setup PDM
+        uses: pdm-project/setup-pdm@main
+        with:
+          python-version: 3.10 # Version range or exact version of a Python version to use, the same as actions/setup-python
+          architecture: x64 # The target architecture (x86, x64) of the Python interpreter. the same as actions/setup-python
+          prerelease: false # Allow prerelease versions to be installed
+          enable-pep582: true # Enable PEP 582 package loading globally
+      - name: Install dependencies
+        run: |
+          pdm install -d
+      - name: Deploy with Nuitka
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.10'
+        run: pdm run python3 -m nuitka --include-module=multiprocessing --include-data-file=levels/level1.txt=levels/level1.txt --onefile --assume-yes-for-downloads main.py
+      - name: Upload x86_64 Binary
+        uses: actions/upload-release-asset@v1.0.1
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: ${{ matrix.x86_64 }}
+          asset_name: ${{ env.APP_NAME }}.${{ matrix.platform }}.${{ matrix.name }}
+          asset_content_type: application/octet-stream
