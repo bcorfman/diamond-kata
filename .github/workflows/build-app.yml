@@ -34,7 +34,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python-version: [3.10]
+        python-version: ["3.10"]
         include:
           - os: ubuntu-latest
             x86_64: ./dist/diamond
@@ -60,7 +60,7 @@ jobs:
           pdm install -d
       - name: Deploy with Nuitka
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.10'
-        run: pdm run python3 -m nuitka --include-module=multiprocessing --include-data-file=levels/level1.txt=levels/level1.txt --onefile --assume-yes-for-downloads main.py
+        run: pdm run python3 -m nuitka --onefile --assume-yes-for-downloads main.py
       - name: Upload x86_64 Binary
         uses: actions/upload-release-asset@v1.0.1
         with:
